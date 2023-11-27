@@ -1,5 +1,4 @@
 // TODO: Make this more structured
-
 #include "vga.h"
 
 #include "cpu/cpu.h"
