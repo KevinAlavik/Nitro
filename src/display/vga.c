@@ -35,7 +35,7 @@ unsigned int rgb(uint8_t red, uint8_t green, uint8_t blue) {
 }
 
 void draw_pixel(uint64_t x, uint64_t y, uint8_t r, uint8_t b, uint8_t g) {
-    fb_ptr[y * framebuffer->width + x] = rgb(r, g, b);
+    fb_ptr[x * 4 + y * framebuffer->pitch] = rgb(r, g, b);
 }
 
 void set_background_color(uint16_t red, uint16_t green, uint16_t blue) {
