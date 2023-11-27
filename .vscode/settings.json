@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "serial.h": "c",
+        "vga.h": "c",
+        "tools.h": "c",
+        "logger.h": "c"
+    }
+}
