@@ -51,9 +51,9 @@ void set_background_color(uint16_t red, uint16_t green, uint16_t blue) {
 
 void draw_letter(int letterIndex, int x, int y, int r, int g, int b)
 {
-    for (size_t yi = 0; yi < 16; yi++)
+    for (size_t yi = 0; yi < LETTER_HEIGHT; yi++)
     {
-        for (size_t xi = 0; xi < 8; xi++)
+        for (size_t xi = 0; xi < LETTER_WIDTH; xi++)
         {
             uint8_t bit = current_font[letterIndex][yi] & (0x80 >> xi);
             if (bit != 0)
