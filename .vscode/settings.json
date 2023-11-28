@@ -3,6 +3,8 @@
         "serial.h": "c",
         "vga.h": "c",
         "tools.h": "c",
-        "logger.h": "c"
+        "logger.h": "c",
+        "pm.h": "c",
+        "limine.h": "c"
     }
 }

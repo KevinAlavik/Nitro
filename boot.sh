@@ -24,4 +24,4 @@ rm -rf iso_root
 make clean
 
 # Execute qemu-system-x86_64 with passed arguments
-qemu-system-x86_64 -hda image.iso -drive format=raw "${@}"  
+qemu-system-x86_64 -hda image.iso "${@}"  

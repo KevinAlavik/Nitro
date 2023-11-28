@@ -33,8 +33,9 @@ unsigned int rgb(uint8_t red, uint8_t green, uint8_t blue) {
     return (0xFF << 24) | (red << 16) | (green << 8) | blue;
 }
 
-void draw_pixel(uint64_t x, uint64_t y, uint8_t r, uint8_t b, uint8_t g) {
-    fb_ptr[x * 4 + y * framebuffer->pitch] = rgb(r, g, b);
+void draw_pixel(uint64_t x, uint64_t y, uint8_t r, uint8_t g, uint8_t b) {
+    uint32_t* fb_ptr = (uint32_t*)((uintptr_t)framebuffer->address + x * 4 + y * framebuffer->pitch);
+    *fb_ptr = rgb(r, b, g);
 }
 
 void set_background_color(uint16_t red, uint16_t green, uint16_t blue) {
@@ -50,14 +51,15 @@ void set_background_color(uint16_t red, uint16_t green, uint16_t blue) {
 }
 
 
-//TODO: Add option to set letter size (font size)
-void draw_letter(int letterIndex, int x, int y, int r, int g, int b)
+void draw_letter(int letterIndex, int x, int y, int r, int g, int b, size_t letterSize)
 {
-    for (size_t yi = 0; yi < LETTER_HEIGHT; yi++)
+    letterIndex = (letterIndex < 0 || letterIndex >= 255) ? 3 : letterIndex;
+
+    for (size_t yi = 0; yi < LETTER_HEIGHT * letterSize; yi++)
     {
-        for (size_t xi = 0; xi < LETTER_WIDTH; xi++)
+        for (size_t xi = 0; xi < LETTER_WIDTH * letterSize; xi++)
         {
-            uint8_t bit = current_font[letterIndex][yi] & (0x80 >> xi);
+            uint8_t bit = current_font[letterIndex][yi / letterSize] & (0x80 >> (xi / letterSize));
             if (bit != 0)
             {
                 draw_pixel(x + xi, y + yi, r, b, g);
@@ -65,6 +67,7 @@ void draw_letter(int letterIndex, int x, int y, int r, int g, int b)
         }
     }
 }
+
 
 // TODO: Move these into a somewhat stdlib
 
@@ -101,7 +104,7 @@ void printf(const char* text) {
         int r = 255, g = 255, b = 255;
 
         int letterIndex = (int)letter;
-        draw_letter(letterIndex, x_position, y_position, r, g, b);
+        draw_letter(letterIndex, x_position, y_position, r, g, b, 1);
 
         current_column++;
     }
@@ -125,7 +128,56 @@ void printfc(const char* text, int r, int g, int b) {
         int y_position = TEXT_PADDING + (current_line * (LETTER_HEIGHT + TEXT_PADDING));
 
         int letterIndex = (int)letter;
-        draw_letter(letterIndex, x_position, y_position, r, g, b);
+        draw_letter(letterIndex, x_position, y_position, r, g, b, 1);
+
+        current_column++;
+    }
+}
+
+void printfcs(const char* text, int r, int g, int b, int size) {
+    for (int i = 0; text[i] != '\0'; ++i) {
+        char letter = text[i];
+
+        if (letter == '\n') {
+            newline();
+            continue;
+        }
+
+        if (letter == '\t') {
+            current_column += INDENT_AMOUNT;
+            continue;
+        }
+
+        int x_position = TEXT_PADDING + (current_column * (LETTER_WIDTH + TEXT_PADDING));
+        int y_position = TEXT_PADDING + (current_line * (LETTER_HEIGHT + TEXT_PADDING));
+
+        int letterIndex = (int)letter;
+        draw_letter(letterIndex, x_position, y_position, r, g, b, 1);
+
+        current_column++;
+    }
+}
+
+void printfs(const char* text, int size) {
+    for (int i = 0; text[i] != '\0'; ++i) {
+        char letter = text[i];
+
+        if (letter == '\n') {
+            newline();
+            continue;
+        }
+
+        if (letter == '\t') {
+            current_column += INDENT_AMOUNT;
+            continue;
+        }
+
+        int x_position = TEXT_PADDING + (current_column * (LETTER_WIDTH + TEXT_PADDING));
+        int y_position = TEXT_PADDING + (current_line * (LETTER_HEIGHT + TEXT_PADDING));
+        int r = 255, g = 255, b = 255;
+
+        int letterIndex = (int)letter;
+        draw_letter(letterIndex, x_position, y_position, r, g, b, 1);
 
         current_column++;
     }
