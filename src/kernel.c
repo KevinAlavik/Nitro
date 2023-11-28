@@ -18,6 +18,8 @@ void _start(void) {
     init_display();
     set_background_color(0, 0, 0);
     log(OK, "Initialized display.");
+    idt_init();
+    log(OK, "Initialized IDT manager.");
 
     printf("Welcome to ");
     printfc("Nitro\n", 102, 179, 255);
