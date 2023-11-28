@@ -49,6 +49,8 @@ void set_background_color(uint16_t red, uint16_t green, uint16_t blue) {
     }
 }
 
+
+//TODO: Add option to set letter size (font size)
 void draw_letter(int letterIndex, int x, int y, int r, int g, int b)
 {
     for (size_t yi = 0; yi < LETTER_HEIGHT; yi++)
