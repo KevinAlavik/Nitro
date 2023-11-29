@@ -17,15 +17,15 @@ void _start(void) {
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
-    init_pm();
-    log(OK, "Initialized physical memory manager.");
+    //init_pm();
+    //log(OK, "Initialized physical memory manager.");
 
     printf("Welcome to ");
     printfc("Nitro\n", 102, 179, 255);
 
-    printf("\n");
-    printf("Availible memory: ");
-    printf(unused_memory_count);
+    //printf("\n");
+    //printf("Availible memory: ");
+    //printf(unused_memory_count);
 
     hcf();
 }
