@@ -1,4 +1,5 @@
 // TODO: Make this more structured
+// TODO: Move the majority of term/font handeling to nighterm.h
 #include "vga.h"
 
 #include "cpu/cpu.h"
@@ -63,6 +64,9 @@ void draw_letter(int letterIndex, int x, int y, int r, int g, int b, size_t lett
             if (bit != 0)
             {
                 draw_pixel(x + xi, y + yi, r, b, g);
+            } else {
+                // TODO: Make this use a bg set by the users
+                draw_pixel(x + xi, y + yi, display_red, display_blue, display_green);
             }
         }
     }
@@ -77,6 +81,11 @@ size_t current_column = 0;
 void newline() {
     current_line++;
     current_column = 0;
+}
+
+void move_cursor(int row, int col) {
+    current_line = row;    
+    current_columnt = col;
 }
 
 void clear() {
