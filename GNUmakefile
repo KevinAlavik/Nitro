@@ -60,6 +60,7 @@ override CFLAGS += \
     -mno-red-zone \
     -mgeneral-regs-only \
     -Ilimine\
+    -Isrc/libs\
     -DSUPPORT_FLOAT \
     -Wimplicit-function-declaration \
     -Wdiv-by-zero \
