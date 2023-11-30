@@ -26,6 +26,14 @@ void init_display() {
     fb_ptr = framebuffer->address;
 }
 
+int getScreenHeight() {
+    return framebuffer->height
+}
+
+int getScreenWidth() {
+    return framebuffer->width
+}
+
 void display_write_data(uint32_t address, uint8_t red, uint8_t green, uint8_t blue) {
     fb_ptr[address] = rgb(red, green, blue);
 }
