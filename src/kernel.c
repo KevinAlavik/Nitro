@@ -20,7 +20,7 @@ void _start(void) {
     log(OK, "Initialized IDT.");
     //init_pm();
     //log(OK, "Initialized physical memory manager.");
-    init_nighterm(getHeight() / LETTER_HEIGHT, getWidth() / LETTER_WIDTH);
+    init_nighterm(getFb());
     log(OK, "Initialized Nighterm");
 
     printf("Welcome to ");

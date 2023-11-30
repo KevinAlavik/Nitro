@@ -27,13 +27,15 @@ void init_display() {
 }
 
 int getScreenHeight() {
-    return framebuffer->height
+    return framebuffer->height;
 }
 
 int getScreenWidth() {
-    return framebuffer->width
+    return framebuffer->width;
 }
-
+struct limine_framebuffer *getFb(){
+    return framebuffer;
+}
 void display_write_data(uint32_t address, uint8_t red, uint8_t green, uint8_t blue) {
     fb_ptr[address] = rgb(red, green, blue);
 }
@@ -93,7 +95,7 @@ void newline() {
 
 void move_cursor(int row, int col) {
     current_line = row;    
-    current_columnt = col;
+    current_column = col;
 }
 
 void clear() {
@@ -218,40 +220,3 @@ void print_char(char letter, int x, int y, int r, int g, int b, int fontSize) {
     draw_letter((int)letter, x_position, y_position, r, g, b, fontSize);
     current_column++;
 }
-
-void fprintf(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    for (int i = 0; format[i] != '\0'; ++i) {
-        char letter = format[i];
-
-        if (letter == '%') {
-            char next_char = format[i + 1];
-            if (next_char == 'd') {
-                int value = va_arg(args, int);
-                char buffer[20];
-                sprintf(buffer, "%d", value);
-                for (int j = 0; buffer[j] != '\0'; ++j) {
-                    print_char(buffer[j], 0, 0, 255, 255, 255, 1);
-                }
-                i++;
-            } else if (next_char == 'c') {
-                char value = va_arg(args, int);
-                print_char(value, 0, 0, 255, 255, 255, 1);
-                i++;
-            } else if (next_char == 's') {
-                char *value = va_arg(args, char *);
-                for (int j = 0; value[j] != '\0'; ++j) {
-                    print_char(value[j], 0, 0, 255, 255, 255, 1);
-                }
-                i++;
-            }
-        } else {
-            print_char(letter, 0, 0, 255, 255, 255, 1);
-        }
-    }
-
-    va_end(args);
-}
-
