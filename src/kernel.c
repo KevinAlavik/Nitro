@@ -29,6 +29,7 @@ void _start(void) {
     //printf("\n");
     //printf("Availible memory: ");
     //printf(unused_memory_count);
+    fprintf("This is a test with formatted print: ", 3);
 
     hcf();
 }
