@@ -199,3 +199,59 @@ void printfs(const char* text, int size) {
         current_column++;
     }
 }
+
+// Begin: new stdio lib
+void print_char(char letter, int x, int y, int r, int g, int b, int fontSize) {
+    if (letter == '\n') {
+        newline();
+        return;
+    }
+
+    if (letter == '\t') {
+        current_column += INDENT_AMOUNT;
+        return;
+    }
+
+    int x_position = x + (current_column * (LETTER_WIDTH + TEXT_PADDING));
+    int y_position = y + (current_line * (LETTER_HEIGHT + TEXT_PADDING));
+
+    draw_letter((int)letter, x_position, y_position, r, g, b, fontSize);
+    current_column++;
+}
+
+void fprintf(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    for (int i = 0; format[i] != '\0'; ++i) {
+        char letter = format[i];
+
+        if (letter == '%') {
+            char next_char = format[i + 1];
+            if (next_char == 'd') {
+                int value = va_arg(args, int);
+                char buffer[20];
+                sprintf(buffer, "%d", value);
+                for (int j = 0; buffer[j] != '\0'; ++j) {
+                    print_char(buffer[j], 0, 0, 255, 255, 255, 1);
+                }
+                i++;
+            } else if (next_char == 'c') {
+                char value = va_arg(args, int);
+                print_char(value, 0, 0, 255, 255, 255, 1);
+                i++;
+            } else if (next_char == 's') {
+                char *value = va_arg(args, char *);
+                for (int j = 0; value[j] != '\0'; ++j) {
+                    print_char(value[j], 0, 0, 255, 255, 255, 1);
+                }
+                i++;
+            }
+        } else {
+            print_char(letter, 0, 0, 255, 255, 255, 1);
+        }
+    }
+
+    va_end(args);
+}
+
