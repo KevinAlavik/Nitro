@@ -5,6 +5,7 @@
         "tools.h": "c",
         "logger.h": "c",
         "pm.h": "c",
-        "limine.h": "c"
+        "limine.h": "c",
+        "nighterm.h": "c"
     }
 }

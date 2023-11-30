@@ -19,11 +19,11 @@ struct Terminal {
     int curY;
     int rows;
     int cols;    
-    char* textBuffer;
 };
+extern struct Terminal term;
 
-struct Terminal* init_nighterm(struct limine_file* font);
-void nighterm_refresh(struct Terminal *term);
-void clear_text_buffer(struct Terminal *term);
+int init_nighterm(struct limine_file* font);
+void nighterm_refresh();
+void clear_text_buffer();
 
 #endif // NIGHTERM_H_

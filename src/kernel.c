@@ -6,6 +6,8 @@
 #include "idt/idt.h"
 #include "memory/pm.h"
 #include "nighterm/nighterm.h"
+static volatile struct limine_module_request mod_request = {
+    .id = LIMINE_MODULE_REQUEST, .revision = 0};
 
 void panic(char* m) {
     log(PANIC, m);
@@ -20,7 +22,7 @@ void _start(void) {
     log(OK, "Initialized IDT.");
     //init_pm();
     //log(OK, "Initialized physical memory manager.");
-    init_nighterm(getFb());
+    init_nighterm(mod_request.response->modules[0]);
     log(OK, "Initialized Nighterm");
 
     printf("Welcome to ");
@@ -29,7 +31,6 @@ void _start(void) {
     //printf("\n");
     //printf("Availible memory: ");
     //printf(unused_memory_count);
-    fprintf("This is a test with formatted print: ", 3);
 
     hcf();
 }
