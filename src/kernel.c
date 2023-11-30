@@ -5,6 +5,7 @@
 #include "cpu/cpu.h"
 #include "idt/idt.h"
 #include "memory/pm.h"
+#include "nighterm/nighterm.h"
 
 void panic(char* m) {
     log(PANIC, m);
@@ -19,6 +20,8 @@ void _start(void) {
     log(OK, "Initialized IDT.");
     //init_pm();
     //log(OK, "Initialized physical memory manager.");
+    init_nighterm(getHeight() / LETTER_HEIGHT, getWidth() / LETTER_WIDTH);
+    log(OK, "Initialized Nighterm");
 
     printf("Welcome to ");
     printfc("Nitro\n", 102, 179, 255);
