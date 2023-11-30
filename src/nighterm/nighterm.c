@@ -20,6 +20,17 @@ struct Terminal* init_nighterm(int rows, int cols) {
     return term;
 }
 
+void nighterm_refresh(struct Terminal *term) {
+    int row, col;
+    for (row = 0; row < term->rows; row++) {
+        for (col = 0; col < term->cols; col++) {
+            char ch = term->textBuffer[row * term->cols + col];
+            printf(ch)
+        }
+        printf("\n");
+    }
+}
+
 void clear_text_buffer(struct Terminal *term) {
     size_t buffer_size = (size_t)term->rows * term->cols;
     memset(term->textBuffer, ' ', buffer_size);
