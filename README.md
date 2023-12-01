@@ -5,9 +5,9 @@ Nitro comes with NitrOS and nsh (Nitro Shell). Nitro is a more serious kernel bu
 ## TTY
 Nitro and NitrOS is using [**nighterm**](https://github.com/kevinalavik/Nitro/tree/main/src/nighterm/nighterm.h) as a terminal / display manager.
 
-## Nighterm (`src/nighterm/nighterm.h`)
+## Nighterm (`src/nighterm/`)
 
-## EGL (`src/egl/egl.h`)
+## EGL (`src/egl/`)
 **E**asy**G**raphics**L**ibrary, can be used to draw simple shapes and other GUI actions
 
 ## The idea..
