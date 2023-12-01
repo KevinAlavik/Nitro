@@ -6,6 +6,8 @@
 #include "idt/idt.h"
 #include "memory/pm.h"
 #include "nighterm/nighterm.h"
+#include "egl/backends/fb.h"
+
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST, .revision = 0};
 
@@ -16,18 +18,20 @@ void panic(char* m) {
 
 void _start(void) {
     init_display();
-    set_background_color(0, 0, 0);
+    init_nighterm(mod_request.response->modules[0]);
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
 
     printf("Welcome to ");
-    printfc("Nitro\n", 102, 179, 255);
-    init_nighterm(mod_request.response->modules[0]);
-    log(OK, "Initialized Nighterm");
+    nighterm_set_char_fg(102, 179, 255);
+    printf("Nitro\n");
+    nighterm_set_char_fg(255,255,255);//NOTE: this is kinda wrong, look here if the color is misteriously resetting
 
-    nighterm_print("This is a test");
-    nighterm_refresh();
+    printf("Hello\tTabs, my beloved!");
+
+    draw_rect(100,100,200,100,255,255,255,1);
+    draw_text("\"\"Button\"\"",120,75,255,0,0);
 
     hcf();
 }

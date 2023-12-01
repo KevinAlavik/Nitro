@@ -63,7 +63,8 @@ override CFLAGS += \
     -DSUPPORT_FLOAT \
     -Wimplicit-function-declaration \
     -Wdiv-by-zero \
-    -Wunused-variable
+    -Wunused-variable \
+    -DPRINTF_DISABLE_SUPPORT_FLOAT
  
 # Internal C preprocessor flags that should not be changed by the user.
 override CPPFLAGS := \

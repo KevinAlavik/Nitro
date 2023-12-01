@@ -1,7 +1,8 @@
 #ifndef LOGGER_H_
 #define LOGGER_H_
 
-#include <stdio.h>
+#include <nighterm/nighterm.h>
+#include "printf.h"
 
 typedef enum {
     INFO,
@@ -10,8 +11,6 @@ typedef enum {
     PANIC,
     OK
 } LogLevel;
-
-void printfc(const char* text, int r, int g, int b);
 
 void log(LogLevel level, const char* message) {
     const char* level_str;
@@ -45,10 +44,11 @@ void log(LogLevel level, const char* message) {
     }
 
     printf("[ ");
-    printfc(level_str, r, g, b);
+    nighterm_set_char_fg(r,g,b);
+    printf(level_str);
+    nighterm_set_char_fg(255,255,255);//NOTE: this is kinda wrong, look here if the color is misteriously resetting
     printf(" ] ");
-    printf(message);
-    newline();
+    printf("%s\n",message);
 }
 
 #endif // LOGGER_H_
