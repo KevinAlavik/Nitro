@@ -1,11 +1,14 @@
 #include "nighterm.h"
 #include "display/vga.h"
-
 struct Terminal term;
 char textBuffer[4096*4];
-uint8_t r = 255;
-uint8_t g = 255;
-uint8_t b = 255;
+uint8_t fg_r = 255;
+uint8_t fg_g = 255;
+uint8_t fg_b = 255;
+
+uint8_t bg_r = 0;
+uint8_t bg_g = 0;
+uint8_t bg_b = 0;
 
 // TODO: Move memset into its own stdlib
 void* memset(void *ptr, int value, size_t num) {
@@ -32,14 +35,19 @@ int init_nighterm(struct limine_file* font) {
     term.rows = (getScreenWidth() / hdr.width);
     term.curX = 0;
     term.curY = 0;
-    memset(textBuffer, ' ', buffer_size);
+    nighterm_clear();
     return 1;
 }
 
 void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g) {
-    r = r;
-    g = g;
-    b = b;
+    fg_r = r;
+    fg_g = g;
+    fg_b = b;
+}
+void nighterm_set_char_bg(uint8_t r, uint8_t b, uint8_t g) {
+    bg_r = r;
+    bg_g = g;
+    bg_b = b;
 }
 
 void nighterm_render_char(int row, int col,char ch){
@@ -49,9 +57,9 @@ void nighterm_render_char(int row, int col,char ch){
     for (size_t y = 0; y < term.fonthdr.height; y++) {
         for (size_t x = 0; x < term.fonthdr.width; x++) {
             if ((glyph[y * ((term.fonthdr.width / 8) + rounding) + x / 8] >> (7 - x % 8)) & 1) {
-                draw_pixel(col+x, row+y, r, g, b);
+                draw_pixel(col*term.fonthdr.width + x, row*term.fonthdr.height+ y, fg_r, fg_g, fg_b);
             } else {
-                //TODO: plot a secondary/background color pixel at the correct location
+                draw_pixel(col*term.fonthdr.width + x, row*term.fonthdr.height+ y, bg_r, bg_g, bg_b);
             }
         }
     }
@@ -65,27 +73,37 @@ void nighterm_refresh() {
             char ch = textBuffer[row * term.cols + col];
             nighterm_render_char(row,col,ch);
         }
-        printf("\n");
     }
 }
 
-void clear_text_buffer() {
+void nighterm_clear() {
     size_t buffer_size = (size_t)term.rows * term.cols;
     memset(textBuffer, ' ', buffer_size);
+    nighterm_refresh();
 }
 
-void nighterm_print(const char* text) {
-    nighterm_set_char_fg(255, 255, 255);
+void nighterm_write(char ch) {
     size_t buffer_size = (size_t)term.rows * term.cols;
-    int bufferIndex = 0;
-
-    while (textBuffer[bufferIndex] != '\0' && bufferIndex < buffer_size) {
-        bufferIndex++;
+    switch (ch)
+    {
+    case '\n':
+        term.curX = 0;
+        term.curY++;
+        break;
+    case '\t':
+        term.curX += INDENT_AMOUNT;
+        break;
+    case '\b':
+        term.curX -= 1;
+        break;
+    case 0:
+        break;// ignore termination
+    default:
+        int bufferIndex = term.curY * term.cols + term.curX;
+        textBuffer[bufferIndex] = ch;
+        term.curX++;
+        nighterm_render_char(term.curY,term.curX,ch);
+        break;
     }
 
-    for (int i = 0; text[i] != '\0' && bufferIndex < buffer_size - 1; ++i) {
-        textBuffer[bufferIndex++] = text[i];
-    }
-
-    textBuffer[bufferIndex] = '\0';
 }
