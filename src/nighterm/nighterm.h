@@ -21,9 +21,14 @@ struct Terminal {
     int cols;    
 };
 extern struct Terminal term;
+extern uint8_t r;
+extern uint8_t g;
+extern uint8_t b;
 
 int init_nighterm(struct limine_file* font);
 void nighterm_refresh();
 void clear_text_buffer();
+void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g);
+void nighterm_print(const char* text);
 
 #endif // NIGHTERM_H_

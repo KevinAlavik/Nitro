@@ -20,11 +20,14 @@ void _start(void) {
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
-    init_nighterm(mod_request.response->modules[0]);
-    log(OK, "Initialized Nighterm");
 
     printf("Welcome to ");
     printfc("Nitro\n", 102, 179, 255);
+    init_nighterm(mod_request.response->modules[0]);
+    log(OK, "Initialized Nighterm");
+
+    nighterm_print("This is a test");
+    nighterm_refresh();
 
     hcf();
 }
