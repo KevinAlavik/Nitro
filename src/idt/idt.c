@@ -26,4 +26,5 @@ void idt_init() {
     }
 
     load_idt((uint64_t)&idt_p);
+    __asm__ volatile("sti");
 }

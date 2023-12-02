@@ -33,7 +33,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #include "printf.h"
 #include <nighterm/nighterm.h>
-#include <serial/serial.h>
+#include <arch/x86/io/portio.h>
 #include <stdbool.h>
 #include <stdint.h>
 

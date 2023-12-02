@@ -2,6 +2,8 @@
     "files.associations": {
         "cmath": "c",
         "serial.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "chrono": "c",
+        "pic.h": "c"
     }
 }

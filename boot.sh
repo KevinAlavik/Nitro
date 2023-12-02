@@ -1,8 +1,5 @@
 #!/bin/bash
 OS_NAME="Nitro"
-
-make -C limine
-make clean
 make
 
 mkdir -p iso_root
@@ -22,7 +19,6 @@ xorriso -as mkisofs -b limine-bios-cd.bin \
 
 ./limine/limine bios-install image.iso
 rm -rf iso_root
-make clean
 
 # Execute qemu-system-x86_64 with passed arguments
-qemu-system-x86_64 -hda image.iso "${@}"  
+qemu-system-x86_64 -d int -hda image.iso "${@}"  

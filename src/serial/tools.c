@@ -1,5 +1,5 @@
 #include "tools.h"
-#include "serial.h"
+#include <arch/x86/io/portio.h>
 
 void serial_printf(uint16_t port, char* string) {
 
