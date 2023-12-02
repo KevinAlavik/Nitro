@@ -22,7 +22,6 @@ void _start(void) {
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
-
     printf("Welcome to ");
     nighterm_set_char_fg(102, 179, 255);
     printf("Nitro\n");

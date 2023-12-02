@@ -71,7 +71,7 @@ void nighterm_refresh() {
     for (row = 0; row < term.rows; row++) {
         for (col = 0; col < term.cols; col++) {
             char ch = textBuffer[row * term.cols + col];
-            nighterm_render_char(row,col,ch);
+            nighterm_render_char(col, row, ch);
         }
     }
 }
@@ -102,7 +102,7 @@ void nighterm_write(char ch) {
         int bufferIndex = term.curY * term.cols + term.curX;
         textBuffer[bufferIndex] = ch;
         term.curX++;
-        nighterm_render_char(term.curY,term.curX,ch);
+        nighterm_render_char(term.curY,term.curX - 1,ch);
         break;
     }
 
