@@ -67,6 +67,8 @@ void nighterm_render_char(int row, int col,char ch){
 
 void nighterm_refresh() {
     //Note: do not overuse this function since refreshing one character at a time is much mre efficient
+    term.curX = 0;
+    term.curY = 0;
     int row, col;
     for (row = 0; row < term.rows; row++) {
         for (col = 0; col < term.cols; col++) {
