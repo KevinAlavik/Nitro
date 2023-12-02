@@ -40,16 +40,16 @@ __attribute__((interrupt)) void mus_handler(void *)
             }
             buttons = buffer[0];
         }
-    printf("a");
-    i8259_SendEndOfInterrupt(0x0C);
+    printf("b");
+    i8259_SendEndOfInterrupt(PIC_REMAP_OFFSET +0x0C);
 }
 __attribute__((interrupt)) void kb_handler(void *)
 {
 
     char butt = inb8(PS2_DATA);
-    printf("a");
+    printf("a %u\n",butt);
 
-    i8259_SendEndOfInterrupt(1);
+    i8259_SendEndOfInterrupt(PIC_REMAP_OFFSET +1);
 }
 
 void init_ps2()
@@ -57,24 +57,40 @@ void init_ps2()
 
     set_idt_gate(PIC_REMAP_OFFSET + 0x0C, (uint64_t)&mus_handler, 0x28, 0x8E);
     set_idt_gate(PIC_REMAP_OFFSET + 1, (uint64_t)&kb_handler, 0x28, 0x8E);
+//
+    //if (inb8(PS2_COMMAND) & 0x1)
+    //    inb8(PS2_DATA);
+//
+    //outb8(PS2_COMMAND, 0x60);
+    //outb8(PS2_DATA, 0b01100111);
+    //inb8(PS2_DATA); //Acknowledge
+//
+    //outb8(PS2_COMMAND,0xAE);
+    //inb8(PS2_DATA); //Acknowledge
+    //outb8(PS2_COMMAND,0xA8);
+    //inb8(PS2_DATA); //Acknowledge
+//
+    //outb8(PS2_COMMAND, 0xD4);
+    //outb8(PS2_DATA, 0xF6);
+    //inb8(PS2_DATA); //Acknowledge
+    //outb8(PS2_COMMAND, 0xD2);
+    //outb8(PS2_DATA, 0xF6);
+    //inb8(PS2_DATA); //Acknowledge
+    //outb8(PS2_COMMAND, 0xD4);
+    //outb8(PS2_DATA, 0xF4);
+    //inb8(PS2_DATA); //Acknowledge
+    //outb8(PS2_COMMAND, 0xD2);
+    //outb8(PS2_DATA, 0xF4);
+    //inb8(PS2_DATA); //Acknowledge
 
     if (inb8(PS2_COMMAND) & 0x1)
         inb8(PS2_DATA);
+    outb8(PS2_COMMAND, 0x60);
+    outb8(PS2_DATA, 0b01100111);
 
     outb8(PS2_COMMAND, 0xAE);
-    outb8(PS2_COMMAND, 0xA8);
+    outb8(PS2_DATA, 0xf4);
 
-    outb8(PS2_COMMAND, 0x60);
-    outb8(PS2_DATA, 0b01000111);
-
-    outb8(PS2_COMMAND, 0xD4);
-    outb8(PS2_DATA, 0xFF);
-    outb8(PS2_COMMAND, 0xD2);
-    outb8(PS2_DATA, 0xFF);
-    outb8(PS2_COMMAND, 0xD4);
-    outb8(PS2_DATA, 0xF4);
-    outb8(PS2_COMMAND, 0xD2);
-    outb8(PS2_DATA, 0xF4);
-    i8259_Unmask(0xC);
-    i8259_Unmask(1);
+    i8259_Unmask(PIC_REMAP_OFFSET +0xC);
+    i8259_Unmask(PIC_REMAP_OFFSET +1);
 }

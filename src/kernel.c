@@ -22,7 +22,7 @@ void _start(void) {
     init_nighterm(mod_request.response->modules[0]);
     log(OK, "Initialized display.");
     idt_init();
-    i8259_Configure(PIC_REMAP_OFFSET,PIC_REMAP_OFFSET,false);
+    i8259_Configure(PIC_REMAP_OFFSET,PIC_REMAP_OFFSET + 8,false);
     log(OK, "Initialized IDT.");
 
     init_ps2();
