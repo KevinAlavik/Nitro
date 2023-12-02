@@ -26,12 +26,7 @@ void _start(void) {
     printf("Welcome to ");
     nighterm_set_char_fg(102, 179, 255);
     printf("Nitro\n");
-    nighterm_set_char_fg(255,255,255);//NOTE: this is kinda wrong, look here if the color is misteriously resetting
-
-    printf("Hello\tTabs, my beloved!");
-
-    draw_rect(100,100,200,100,255,255,255,1);
-    draw_text("\"\"Button\"\"",120,75,255,0,0);
+    nighterm_set_char_fg(255,255,255);
 
     hcf();
 }
