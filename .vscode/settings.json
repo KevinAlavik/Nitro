@@ -8,6 +8,7 @@
         "vga.h": "c",
         "bitmap.h": "c",
         "limine.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "stdbool.h": "c"
     }
 }
