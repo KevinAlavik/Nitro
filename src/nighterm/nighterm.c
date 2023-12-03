@@ -31,8 +31,8 @@ int init_nighterm(struct limine_file* font) {
     size_t buffer_size = (size_t)(getScreenWidth() / hdr.width) * (getScreenHeight() / hdr.height);
     term.fonthdr = hdr;
     term.fontData = psf2buf;
-    term.cols = (getScreenHeight() / hdr.height);
-    term.rows = (getScreenWidth() / hdr.width);
+    term.rows = (getScreenHeight() / hdr.height);
+    term.cols = (getScreenWidth() / hdr.width);
     term.curX = 0;
     term.curY = 0;
     nighterm_clear();
@@ -73,7 +73,7 @@ void nighterm_refresh() {
     for (row = 0; row < term.rows; row++) {
         for (col = 0; col < term.cols; col++) {
             char ch = textBuffer[row * term.cols + col];
-            nighterm_render_char(col, row, ch);
+            nighterm_render_char(row, col, ch);
         }
     }
 }
