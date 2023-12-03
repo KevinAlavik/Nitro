@@ -9,6 +9,13 @@
         "bitmap.h": "c",
         "limine.h": "c",
         "stddef.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "keyboard.h": "c",
+        "layouts.h": "c",
+        "limits.h": "c",
+        "controller.h": "c",
+        "stdint.h": "c",
+        "tools.h": "c",
+        "inttypes.h": "c"
     }
 }

@@ -109,3 +109,8 @@ void nighterm_write(char ch) {
     }
 
 }
+
+void nighterm_move_cursor(int row, int col) {
+    term.curX = col;
+    term.curY = row;
+}

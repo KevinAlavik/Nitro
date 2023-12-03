@@ -29,5 +29,6 @@ void nighterm_clear();
 void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_set_char_bg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_write(char ch);
+void nighterm_move_cursor(int row, int col);
 
 #endif // NIGHTERM_H_
