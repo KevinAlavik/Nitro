@@ -16,6 +16,9 @@ void init_pm()
     {
         unused_memory_entries = request.response->entries;
         unused_memory_count = request.response->entry_count;
+        if(unused_memory_count <= 0) {
+            panic("Unused memory is either 0 or less, something fucked up");
+        }
     }
     else
     {

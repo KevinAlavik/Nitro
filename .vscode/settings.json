@@ -3,6 +3,7 @@
         "cmath": "c",
         "serial.h": "c",
         "stdio.h": "c",
-        "nighterm.h": "c"
+        "nighterm.h": "c",
+        "fb.h": "c"
     }
 }

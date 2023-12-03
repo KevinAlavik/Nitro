@@ -16,17 +16,30 @@ void panic(char* m) {
     hlt();
 }
 
+__attribute__((interrupt)) void division_by_zero_error(void*) {
+    log(ERROR, "Division by zero!");
+}
+
+void init_os_interupts() {
+    set_idt_gate(0, (uint64_t)&division_by_zero_error, 0x28, 0x8E);
+}
+
 void _start(void) {
     init_display();
     init_nighterm(mod_request.response->modules[0]);
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
+    init_os_interupts();
+    log(OK, "Initialized os interupts.");
+    init_pm();
+    log(OK, "Initialized physical memory manager.");
+    
     printf("\n");
     printf("Welcome to ");
     nighterm_set_char_fg(102, 179, 255);
     printf("Nitro\n");
     nighterm_set_char_fg(255,255,255);
-
+    
     hcf();
 }
