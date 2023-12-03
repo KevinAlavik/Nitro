@@ -34,12 +34,13 @@ void _start(void) {
     log(OK, "Initialized os interupts.");
     init_pm();
     log(OK, "Initialized physical memory manager.");
-    
-    printf("\n");
-    printf("Welcome to ");
-    nighterm_set_char_fg(102, 179, 255);
-    printf("Nitro\n");
-    nighterm_set_char_fg(255,255,255);
-    
+    nighterm_clear();
+    // printf("\n");
+    // printf("Welcome to ");
+    // nighterm_set_char_fg(102, 179, 255);
+    // printf("Nitro\n");
+    // nighterm_set_char_fg(255,255,255);
+
+    printf("Usable memory: %u", usable_memory_count);
     hcf();
 }

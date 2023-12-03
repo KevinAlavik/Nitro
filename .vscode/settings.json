@@ -4,6 +4,10 @@
         "serial.h": "c",
         "stdio.h": "c",
         "nighterm.h": "c",
-        "fb.h": "c"
+        "fb.h": "c",
+        "vga.h": "c",
+        "bitmap.h": "c",
+        "limine.h": "c",
+        "stddef.h": "c"
     }
 }
