@@ -18,9 +18,10 @@ __attribute__((interrupt)) void keyboard_handler(void *)
         panic("Got invalid keyboard data.");
     }
 
-    if (data == 0x2A || data == 0x36) { keyboard.state == KEYBOARD_SHIFT; }
-    if (data == 0x3A) { keyboard.state == KEYBOARD_CAPS; }
-
+    if (data == 0x2A || data == 0x36) { keyboard.state = KEYBOARD_SHIFT; }
+    if (data == 0x3A) { keyboard.state = KEYBOARD_CAPS; }
+    if (data == 0x80) { keyboard.state = KEYBOARD_NORMAL; }
+    
     if (keyboard.state == KEYBOARD_NORMAL) { letterString = sv_layout[data].normal; }
     else if (keyboard.state == KEYBOARD_SHIFT) { letterString = sv_layout[data].shifted; }
     else if (keyboard.state == KEYBOARD_CAPS) { letterString = sv_layout[data].caps; }
