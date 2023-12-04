@@ -17,12 +17,16 @@ void set_idt_gate(int num, uint64_t base, uint16_t sel, uint8_t flags) {
     idt[num].zero = 0;
 }
 
+void empty_idt() {
+    err("A empty interupt got called, make sure to register something here");
+}
+
 void idt_init() {
     idt_p.limit = sizeof(idt_entry_t) * IDT_ENTRIES - 1;
     idt_p.base = (uint64_t)&idt;
 
     for (int i = 0; i < IDT_ENTRIES; ++i) {
-        set_idt_gate(i, 0, 0, 0);
+        set_idt_gate(i, (uint64_t)&empty_idt, 0x28, 0x8E);
     }
 
     load_idt((uint64_t)&idt_p);

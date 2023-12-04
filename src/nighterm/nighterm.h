@@ -20,6 +20,7 @@ struct Terminal {
     int curY;
     int rows;
     int cols;    
+    char* buffer;
 };
 extern struct Terminal term;
 

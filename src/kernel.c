@@ -16,10 +16,9 @@
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST, .revision = 0};
 
-void panic(char* m) {
-    log(PANIC, m);
-    hlt();
-}
+void panic(char* m) { log(PANIC, m); hlt(); }
+
+void err(char* m) { log(ERROR, m); }
 
 // Kernel Variables
 uint64_t usable_memory_count;
@@ -29,6 +28,7 @@ uint64_t screen_width;
 void setup() {
     init_display();
     init_nighterm(mod_request.response->modules[0]);
+    nighterm_move_cursor(1, 0);
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
@@ -54,10 +54,13 @@ char* to_mb(uint64_t size) {
     return result;
 }
 
+__attribute__((interrupt)) void test_int(void*) {
+    log(OK, "Interupt called");
+}
+
 void _start(void) {
     setup();
     nighterm_clear();
-    nighterm_move_cursor(1, 0);
     nighterm_set_char_fg(102, 179, 255);
 
     printf("\n");
@@ -118,7 +121,6 @@ void _start(void) {
     printf("PS/2\n", term.cols);
     nighterm_set_char_fg(255, 255, 255);
 
-
     // Borders
     nighterm_move_cursor(term.rows - 1, 0);
     for (int i = 0; i < term.cols; i++) {
@@ -136,6 +138,7 @@ void _start(void) {
 
     nighterm_set_char_fg(255, 255, 255);
     nighterm_move_cursor(term.rows - 2, 0);
-    printf("todo: Fix the IDT issue (cant seem to be able to register interupts)");
+    printf(":)\n");
+
     hcf();
 }
