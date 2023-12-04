@@ -143,5 +143,5 @@ void _start(void) {
     nighterm_move_cursor(term.rows - 2, 0);
     printf(":)\n");
 
-    hcf();
+    hlt();
 }
