@@ -19,6 +19,9 @@ static volatile struct limine_module_request mod_request = {
 void panic(char* m) { log(PANIC, m); hlt(); }
 
 void err(char* m) { log(ERROR, m); }
+void ok(char* m) { log(OK, m); }
+void warn(char* m) { log(WARNING, m); }
+void info(char* m) { log(INFO, m); }
 
 // Kernel Variables
 uint64_t usable_memory_count;
@@ -60,7 +63,7 @@ __attribute__((interrupt)) void test_int(void*) {
 
 void _start(void) {
     setup();
-    nighterm_clear();
+    //nighterm_clear();
     nighterm_set_char_fg(102, 179, 255);
 
     printf("\n");

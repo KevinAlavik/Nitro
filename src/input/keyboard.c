@@ -11,7 +11,7 @@ __attribute__((interrupt)) void keyboard_handler(void *)
     uint8_t data = inb8(PS2_DATA);
     char* letterString;
 
-    // printf("Got keyboard data: %u. String: %s\n", data, sv_layout[data].normal);
+    //printf("Got keyboard data: %u. String: %s\n", data, sv_layout[data].normal);
 
     if (data == 0)
     {

@@ -50,13 +50,8 @@ void log(LogLevel level, const char* message) {
     printf(" ] %s\n", message);
 }
 
-void clog(const char* message, const char* custom_level_str, int custom_rgb[3]) {
-    int r, g, b;
+void clog(const char* message, const char* custom_level_str, uint8_t r, uint8_t g, uint8_t b) {
     const char* level_str = custom_level_str ? custom_level_str : "Custom";
-    r = custom_rgb ? custom_rgb[0] : 255;
-    g = custom_rgb ? custom_rgb[1] : 255;
-    b = custom_rgb ? custom_rgb[2] : 255;
-
     printf("[ ");
     nighterm_set_char_fg(r,g,b);
     printf(level_str);

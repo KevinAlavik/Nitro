@@ -18,7 +18,7 @@ void set_idt_gate(int num, uint64_t base, uint16_t sel, uint8_t flags) {
 }
 
 void empty_idt() {
-    err("A empty interupt got called, make sure to register something here");
+    warn("A empty interupt was called!");
 }
 
 void idt_init() {
