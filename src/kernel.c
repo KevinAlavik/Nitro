@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include "serial/serial.h"
 #include "serial/tools.h"
 #include "display/vga.h"
@@ -11,7 +10,7 @@
 #include "pic/controller.h"
 #include "input/keyboard.h"
 
-#include <inttypes.h>
+#define PSF2_MODE
 
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST, .revision = 0};
