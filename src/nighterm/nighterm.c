@@ -93,7 +93,7 @@ void nighterm_write(char ch) {
         term.curY++;
         break;
     case '\t':
-        term.curX += INDENT_AMOUNT;
+        term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT)
         break;
     case '\b':
         term.curX -= 1;
