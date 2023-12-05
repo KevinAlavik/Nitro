@@ -16,6 +16,7 @@
         "controller.h": "c",
         "stdint.h": "c",
         "tools.h": "c",
-        "inttypes.h": "c"
+        "inttypes.h": "c",
+        "pm.h": "c"
     }
 }

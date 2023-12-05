@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "serial/serial.h"
 #include "serial/tools.h"
 #include "display/vga.h"
@@ -26,6 +28,9 @@ void info(char* m) { log(INFO, m); }
 uint64_t usable_memory_count;
 uint64_t screen_height;
 uint64_t screen_width;
+
+int saved_x;
+int saved_y;
 
 void setup() {
     init_display();
@@ -122,6 +127,8 @@ void _start(void) {
     nighterm_set_char_fg(146, 255, 151);
     printf("PS/2\n", term.cols);
     nighterm_set_char_fg(255, 255, 255);
+    saved_x = term.curX;
+    saved_y = term.curY;
 
     // Borders
     nighterm_move_cursor(term.rows - 1, 0);
@@ -141,6 +148,8 @@ void _start(void) {
     nighterm_set_char_fg(255, 255, 255);
     nighterm_move_cursor(term.rows - 2, 0);
     printf(":)\n");
+
+    nighterm_move_cursor(saved_y, saved_x);
 
     hlt();
 }

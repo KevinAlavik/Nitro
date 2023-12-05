@@ -1,4 +1,5 @@
 #include "idt.h"
+#include "utilities/printf.h"
 
 #define IDT_ENTRIES 256
 

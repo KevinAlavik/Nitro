@@ -24,9 +24,9 @@ int init_nighterm(struct limine_file* font) {
     psf2Hdr hdr = *(psf2Hdr *)font->address;
     psf2buf += hdr.headerSize;
 
-    if (PSF_MODE == 2 || PSF_MODE == 1 ?? (hdr.magic[0] != PSF_MAGIC0 || hdr.magic[1] != PSF_MAGIC1 || hdr.magic[2] != PSF_MAGIC2 ||
-        hdr.magic[3] != PSF_MAGIC3))
+    if (PSF_MODE == 2 || PSF_MODE == 1 ? (hdr.magic[0] != PSF_MAGIC0 || hdr.magic[1] != PSF_MAGIC1 || hdr.magic[2] != PSF_MAGIC2 || hdr.magic[3] != PSF_MAGIC3) : 0)
         return 0;
+
 
     size_t buffer_size = (size_t)(getScreenWidth() / hdr.width) * (getScreenHeight() / hdr.height);
     term.fonthdr = hdr;
@@ -36,6 +36,7 @@ int init_nighterm(struct limine_file* font) {
     term.curX = 0;
     term.curY = 0;
     nighterm_clear();
+
     return 1;
 }
 
@@ -93,7 +94,7 @@ void nighterm_write(char ch) {
         term.curY++;
         break;
     case '\t':
-        term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT)
+        term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT);
         break;
     case '\b':
         term.curX -= 1;
