@@ -1,7 +1,15 @@
 #ifndef NIGHTERM_H_
 #define NIGHTERM_H_
 #include <limine.h>
-#define INDENT_AMOUNT   4
+
+#define INDENT_AMOUNT 4
+
+#define PSF2_MAGIC0 0x72
+#define PSF2_MAGIC1 0xb5
+#define PSF2_MAGIC2 0x4a
+#define PSF2_MAGIC3 0x86
+
+#define PSF2_MODE
 
 typedef struct {
     uint8_t magic[4];
