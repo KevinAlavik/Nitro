@@ -8,5 +8,7 @@ void hcf() {
 }
 
 void hlt() {
-    asm ("hlt");
+    for (;;) {
+        asm ("hlt");
+    }
 }

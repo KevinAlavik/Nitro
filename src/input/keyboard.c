@@ -31,7 +31,7 @@ __attribute__((interrupt)) void keyboard_handler(void *)
 
     if (letterString != "")
     {
-        printf("%s\n", letterString);
+        printf("%s", letterString);
     }
 
     i8259_SendEndOfInterrupt(1);

@@ -45,6 +45,9 @@ $(eval $(call DEFAULT_VAR,LDFLAGS,$(DEFAULT_LDFLAGS)))
  
 # Internal C flags that should not be changed by the user.
 override CFLAGS += \
+    -O0     \
+    -Ilimine \
+    -Isrc \
     -Wall \
     -Wextra \
     -std=gnu11 \
@@ -52,37 +55,34 @@ override CFLAGS += \
     -fno-stack-protector \
     -fno-stack-check \
     -fno-lto \
-    -fPIE \
+    -fno-PIE \
+    -fno-PIC \
     -m64 \
     -march=x86-64 \
+    -mabi=sysv \
+    -mcmodel=kernel \
     -mno-80387 \
     -mno-mmx \
+    -mno-sse \
+    -mno-sse2 \
     -mno-red-zone \
-    -mgeneral-regs-only \
-    -Ilimine\
-    -DSUPPORT_FLOAT \
-    -Wimplicit-function-declaration \
-    -Wdiv-by-zero \
-    -Wunused-variable \
-    -DPRINTF_DISABLE_SUPPORT_FLOAT
- 
-# Internal C preprocessor flags that should not be changed by the user.
-override CPPFLAGS := \
-    -I src \
-    $(CPPFLAGS) \
-    -MMD \
-    -MP
+	-DPRINTF_DISABLE_SUPPORT_FLOAT \
+    -DHEAP_ACCESSABLE
  
 # Internal linker flags that should not be changed by the user.
 override LDFLAGS += \
-    -m elf_x86_64 \
     -nostdlib \
     -static \
-    -pie \
-    --no-dynamic-linker \
-    -z text \
+    -m elf_x86_64 \
     -z max-page-size=0x1000 \
-    -T linker.ld 
+    -T linker.ld
+ 
+# Internal linker flags that should not be changed by the user.
+override CPPFLAGS := \
+    -I. \
+    $(CPPFLAGS) \
+    -MMD \
+    -MP
  
 # Internal nasm flags that should not be changed by the user.
 override NASMFLAGS += \
