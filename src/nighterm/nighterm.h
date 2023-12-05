@@ -4,18 +4,18 @@
 
 #define INDENT_AMOUNT 4
 
-#define PSF2_MAGIC0 0x72
-#define PSF2_MAGIC1 0xb5
-#define PSF2_MAGIC2 0x4a
-#define PSF2_MAGIC3 0x86
 
 #ifndef PSF2_MODE
+
 #define PSF_MODE 2
+
+#define PSF_MAGIC0 0x72
+#define PSF_MAGIC1 0xb5
+#define PSF_MAGIC2 0x4a
+#define PSF_MAGIC3 0x86
+
 #endif
 
-#ifndef PSF1_MODE
-#define PSF_MODE 1
-#endif
 
 typedef struct {
     uint8_t magic[4];
