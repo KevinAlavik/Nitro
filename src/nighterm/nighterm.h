@@ -13,6 +13,10 @@
 #define PSF_MODE 2
 #endif
 
+#ifndef PSF1_MODE
+#define PSF_MODE 1
+#endif
+
 typedef struct {
     uint8_t magic[4];
     uint32_t version;
