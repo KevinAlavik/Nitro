@@ -10,7 +10,9 @@
 #include "nighterm/nighterm.h"
 #include "egl/backends/fb.h"
 #include "pic/controller.h"
+#include "pit/pit.h"
 #include "input/keyboard.h"
+#include "errors/errors.h"
 
 #define PSF2_MODE
 
@@ -39,6 +41,8 @@ void setup() {
     log(OK, "Initialized display.");
     idt_init();
     log(OK, "Initialized IDT.");
+    register_error_handlers();
+    log(OK, "Registered errors.");
     init_pm();
     log(OK, "Initialized physical memory manager.");
     usable_memory_count = get_usable_memory_count();
@@ -48,6 +52,8 @@ void setup() {
     log(OK, "Saved screen height and width.");
     i8259_Configure(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false);
     log(OK, "Initialized PIC controller.");
+    pit_init();
+    log(OK, "Initialized PIT controller.");
     init_keyboard();
     log(OK, "Initialized keyboard.");
 }
@@ -127,6 +133,13 @@ void _start(void) {
     nighterm_set_char_fg(146, 255, 151);
     printf("PS/2\n", term.cols);
     nighterm_set_char_fg(255, 255, 255);
+
+    nighterm_set_char_fg(255, 255, 255);
+    printf("Keyboard Status - ");
+    nighterm_set_char_fg(146, 255, 151);
+    printf("Disabled\n", term.cols);
+    nighterm_set_char_fg(255, 255, 255);
+
     saved_x = term.curX;
     saved_y = term.curY;
 

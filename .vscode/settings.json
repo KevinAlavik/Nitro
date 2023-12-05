@@ -17,6 +17,7 @@
         "stdint.h": "c",
         "tools.h": "c",
         "inttypes.h": "c",
-        "pm.h": "c"
+        "pm.h": "c",
+        "compare": "cpp"
     }
 }
