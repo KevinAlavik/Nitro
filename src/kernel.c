@@ -19,13 +19,6 @@
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST, .revision = 0};
 
-void panic(char* m) { log(PANIC, m); hlt(); }
-
-void err(char* m) { log(ERROR, m); }
-void ok(char* m) { log(OK, m); }
-void warn(char* m) { log(WARNING, m); }
-void info(char* m) { log(INFO, m); }
-
 // Kernel Variables
 uint64_t usable_memory_count;
 uint64_t screen_height;
@@ -33,6 +26,35 @@ uint64_t screen_width;
 
 int saved_x;
 int saved_y;
+
+void panic(char* m) { 
+    log(PANIC, m); 
+    
+    saved_x = term.curX;
+    saved_y = term.curY;
+    
+    nighterm_move_cursor(term.rows - 2, 0);
+    printf("i think something broke\n");
+    
+    nighterm_move_cursor(saved_y, saved_x);
+    hlt(); 
+}
+
+void err(char* m) { 
+    log(ERROR, m); 
+    
+    saved_x = term.curX;
+    saved_y = term.curY;
+    
+    nighterm_move_cursor(term.rows - 2, 0);
+    printf(":(\n");
+    
+    nighterm_move_cursor(saved_y, saved_x);
+}
+
+void ok(char* m) { log(OK, m); }
+void warn(char* m) { log(WARNING, m); }
+void info(char* m) { log(INFO, m); }
 
 void setup() {
     init_display();
@@ -137,7 +159,7 @@ void _start(void) {
     nighterm_set_char_fg(255, 255, 255);
     printf("Keyboard Status - ");
     nighterm_set_char_fg(146, 255, 151);
-    printf("Disabled\n", term.cols);
+    printf("Enabled\n", term.cols);
     nighterm_set_char_fg(255, 255, 255);
 
     saved_x = term.curX;
