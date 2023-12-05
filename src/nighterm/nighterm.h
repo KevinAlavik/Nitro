@@ -9,7 +9,7 @@
 #define PSF2_MAGIC2 0x4a
 #define PSF2_MAGIC3 0x86
 
-#define PSF2_MODE
+#define PSF2_MODE 1
 
 typedef struct {
     uint8_t magic[4];
