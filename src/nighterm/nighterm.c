@@ -24,8 +24,8 @@ int init_nighterm(struct limine_file* font) {
     psf2Hdr hdr = *(psf2Hdr *)font->address;
     psf2buf += hdr.headerSize;
 
-    if (hdr.magic[0] != 0x72 || hdr.magic[1] != 0xb5 || hdr.magic[2] != 0x4a ||
-        hdr.magic[3] != 0x86)
+    if (PSF2_MODE || (hdr.magic[0] != PSF2_MAGIC0 || hdr.magic[1] != PSF2_MAGIC1 || hdr.magic[2] != PSF2_MAGIC2 ||
+        hdr.magic[3] != PSF2_MAGIC3))
         return 0;
 
     size_t buffer_size = (size_t)(getScreenWidth() / hdr.width) * (getScreenHeight() / hdr.height);
