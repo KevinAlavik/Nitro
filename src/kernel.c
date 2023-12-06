@@ -37,7 +37,7 @@ void panic(char* m) {
     printf("i think something broke\n");
     
     nighterm_move_cursor(saved_y, saved_x);
-    hlt(); 
+    hcf(); 
 }
 
 void err(char* m) { 
