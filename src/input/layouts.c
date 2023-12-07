@@ -2,7 +2,7 @@
 
 // Swedish (SE-SV) layout
 struct KeyState sv_layout[0xFF + 1] = {
-    [0x01] = { "Escaped", "Escaped", "Escaped" },
+    [0x01] = { "", "", "" },
     [0x02] = { "\x31", "!", "1" },
     [0x03] = { "\x32", "\"", "2" },
     [0x04] = { "\x33", "#", "3" },
@@ -15,7 +15,7 @@ struct KeyState sv_layout[0xFF + 1] = {
     [0x0B] = { "\x30", "=", "0" },
     [0x0C] = { "+", "?", "+" },
     [0x0D] = { "´", "`", "´" },
-    [0x0E] = { "\b", "\b", "\b" }, // Backspace
+    [0x0E] = { "\b \b", "\b \b", "\b \b" }, // Backspace
     [0x0F] = { "\t", "\t", "\t" }, // Tab
     [0x10] = { "q", "Q", "Q" },
     [0x11] = { "w", "W", "W" },
@@ -65,7 +65,7 @@ struct KeyState sv_layout[0xFF + 1] = {
 
 // US English (US) layout
 struct KeyState us_layout[0xFF + 1] = {
-    [0x01] = { "Escaped", "Escaped", "Escaped" },
+    [0x01] = { "", "", "" },
     [0x02] = { "\x31", "!", "1" },
     [0x03] = { "\x32", "@", "2" },
     [0x04] = { "\x33", "#", "3" },
@@ -78,7 +78,7 @@ struct KeyState us_layout[0xFF + 1] = {
     [0x0B] = { "\x30", ")", "0" },
     [0x0C] = { "-", "_", "-" },
     [0x0D] = { "=", "+", "=" },
-    [0x0E] = { "\b", "\b", "\b" }, // Backspace
+    [0x0E] = { "\b \b", "\b \b", "\b \b" }, // Backspace
     [0x0F] = { "\t", "\t", "\t" }, // Tab
     [0x10] = { "q", "Q", "Q" },
     [0x11] = { "w", "W", "W" },

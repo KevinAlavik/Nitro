@@ -4,7 +4,6 @@
 
 #define INDENT_AMOUNT 4
 
-
 #ifndef PSF2_MODE
 
 #define PSF_MODE 2
@@ -15,7 +14,6 @@
 #define PSF_MAGIC3 0x86
 
 #endif
-
 
 typedef struct {
     uint8_t magic[4];
@@ -33,9 +31,11 @@ struct Terminal {
     int curX;
     int curY;
     int rows;
-    int cols;    
+    int cols;
     char* buffer;
+    char* title;
 };
+
 extern struct Terminal term;
 
 int init_nighterm(struct limine_file* font);
@@ -45,5 +45,7 @@ void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_set_char_bg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_write(char ch);
 void nighterm_move_cursor(int row, int col);
+
+extern struct Terminal nighterm_get_term();
 
 #endif // NIGHTERM_H_

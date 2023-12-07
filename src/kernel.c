@@ -27,6 +27,10 @@ uint64_t screen_width;
 int saved_x;
 int saved_y;
 
+int log_mode = 0;
+
+char* window_title = "Nighterm";
+
 void panic(char* m) { 
     log(PANIC, m); 
     
@@ -60,24 +64,50 @@ void setup() {
     init_display();
     init_nighterm(mod_request.response->modules[0]);
     nighterm_move_cursor(1, 0);
-    log(OK, "Initialized display.");
+    if(log_mode) { log(OK, "Initialized display."); }
     idt_init();
-    log(OK, "Initialized IDT.");
+    if(log_mode) { log(OK, "Initialized IDT."); }
     register_error_handlers();
-    log(OK, "Registered errors.");
+    if(log_mode) { log(OK, "Registered errors."); }
     init_pm();
-    log(OK, "Initialized physical memory manager.");
+    if(log_mode) { log(OK, "Initialized physical memory manager."); }
     usable_memory_count = get_usable_memory_count();
-    log(OK, "Saved usable memory count.");
+    if(log_mode) { log(OK, "Saved usable memory count."); }
     screen_height = getScreenHeight();
     screen_width = getScreenWidth();
-    log(OK, "Saved screen height and width.");
+    if(log_mode) { log(OK, "Saved screen height and width."); }
     i8259_Configure(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false);
-    log(OK, "Initialized PIC controller.");
+    if(log_mode) { log(OK, "Initialized PIC controller."); }
     pit_init();
-    log(OK, "Initialized PIT controller.");
+    if(log_mode) { log(OK, "Initialized PIT controller."); }
     init_keyboard();
-    log(OK, "Initialized keyboard.");
+    if(log_mode) { log(OK, "Initialized keyboard."); }
+
+    saved_x = term.curX;
+    saved_y = term.curY;
+
+    nighterm_move_cursor(term.rows - 1, 0);
+    for (int i = 0; i < term.cols; i++) {
+        nighterm_set_char_fg(122, 122, 122);
+        printf("=");
+    }
+    
+
+    nighterm_move_cursor(term.rows - term.rows, 0);
+    for (int i = 0; i < term.cols; i++) {
+        nighterm_set_char_fg(122, 122, 122);
+        printf("=");
+    }
+    // Footer text
+
+    nighterm_set_char_fg(255, 255, 255);
+    nighterm_move_cursor(term.rows - 2, 0);
+    printf(":)\n");
+
+    nighterm_move_cursor(term.rows - term.rows, 3);
+    printf(" %s ", window_title);
+
+    nighterm_move_cursor(saved_y, saved_x);
 }
 
 char* to_mb(uint64_t size) {
@@ -107,84 +137,11 @@ void _start(void) {
     printf("\n");
     nighterm_set_char_fg(255, 255, 255);
     
-    printf("Usable memory --- ");
+    printf("Usable memory \t");
     nighterm_set_char_fg(146, 255, 151);
     printf("%s\n", to_mb(usable_memory_count));
     nighterm_set_char_fg(255, 255, 255);
 
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Screen height --- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("%u\n", screen_height);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Screen width ---- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("%u\n", screen_width);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Terminal rows --- ");
-
-    nighterm_set_char_fg(146, 255, 151);
-    printf("%u\n", term.rows);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Terminal cols --- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("%u\n", term.cols);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Terminal -------- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("Nighterm\n", term.cols);
-    nighterm_set_char_fg(255, 255, 255);
-
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Layout ---------- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("SE-SV\n", term.cols);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Keyboard -------- ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("PS/2\n", term.cols);
-    nighterm_set_char_fg(255, 255, 255);
-
-    nighterm_set_char_fg(255, 255, 255);
-    printf("Keyboard Status - ");
-    nighterm_set_char_fg(146, 255, 151);
-    printf("Enabled\n", term.cols);
-    nighterm_set_char_fg(255, 255, 255);
-
-    saved_x = term.curX;
-    saved_y = term.curY;
-
-    // Borders
-    nighterm_move_cursor(term.rows - 1, 0);
-    for (int i = 0; i < term.cols; i++) {
-        nighterm_set_char_fg(122, 122, 122);
-        printf("=");
-    }
-
-    nighterm_move_cursor(term.rows - term.rows, 0);
-    for (int i = 0; i < term.cols; i++) {
-        nighterm_set_char_fg(122, 122, 122);
-        printf("=");
-    }
-
-    // Footer text
-
-    nighterm_set_char_fg(255, 255, 255);
-    nighterm_move_cursor(term.rows - 2, 0);
-    printf(":)\n");
-
-    nighterm_move_cursor(saved_y, saved_x);
-
+    printf("\n");
     hlt();
 }

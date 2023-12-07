@@ -35,6 +35,7 @@ int init_nighterm(struct limine_file* font) {
     term.cols = (getScreenWidth() / hdr.width);
     term.curX = 0;
     term.curY = 0;
+    term.title = "Nighterm";
     nighterm_clear();
 
     return 1;
@@ -87,6 +88,8 @@ void nighterm_clear() {
 
 void nighterm_write(char ch) {
     size_t buffer_size = (size_t)term.rows * term.cols;
+
+
     switch (ch)
     {
     case '\n':
@@ -105,6 +108,10 @@ void nighterm_write(char ch) {
         int bufferIndex = term.curY * term.cols + term.curX;
         textBuffer[bufferIndex] = ch;
         term.curX++;
+
+        if(term.curX-1 == term.cols) {
+            term.curY++;
+        }
         nighterm_render_char(term.curY,term.curX - 1,ch);
         break;
     }
@@ -114,4 +121,8 @@ void nighterm_write(char ch) {
 void nighterm_move_cursor(int row, int col) {
     term.curX = col;
     term.curY = row;
+}
+
+struct Terminal nighterm_get_term() {
+    return term;
 }
