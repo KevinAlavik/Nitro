@@ -2,6 +2,7 @@
 #define KEYBOARD_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define PS2_COMMAND 0x64
 #define PS2_DATA 0x60
@@ -12,6 +13,8 @@
 
 struct Keyboard {
     uint8_t state;
+    uint8_t data;
+    bool out;
 };
 extern struct Keyboard keyboard;
 

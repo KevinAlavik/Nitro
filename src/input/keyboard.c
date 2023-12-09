@@ -4,47 +4,60 @@
 #include "serial/serial.h"
 #include "serial/tools.h"
 
+#include "states/states.h"
+
 #include <nighterm/nighterm.h>
 
 struct Keyboard keyboard;
 
 __attribute__((interrupt)) void keyboard_handler(void *)
 {
-    uint8_t data = inb8(PS2_DATA);
-    char* letterString;
+    if (KEYBOARD_SUPPORT) {
+        uint8_t data = inb8(PS2_DATA);
 
-    //printf("Got keyboard data: %u. String: %s\n", data, sv_layout[data].normal);
+        if (keyboard.data != data) {
+            keyboard.data = data;
+        }
 
-    if (data == 0)
-    {
-        panic("Got invalid keyboard data.");
+        //printf("Scancode: %u; String: %s\n", keyboard.data, sv_layout[keyboard.data].normal);
+
+        char* letterString;
+
+        if (keyboard.data == 0)
+        {
+            panic("Got invalid keyboard data.");
+        }
+
+        if (keyboard.data == 0x2A || keyboard.data == 0x36) { keyboard.state = KEYBOARD_SHIFT; }
+        if (keyboard.data == 0x3A)                          { keyboard.state = KEYBOARD_CAPS; }
+        if (keyboard.data == 0xAA || keyboard.data == 0xB6) { keyboard.state = KEYBOARD_NORMAL; }
+        
+        if (keyboard.data == 0x01) { 
+            if (!keyboard.out) {
+                #define ENABLE_KEYBOARD_PRINTF
+                keyboard.out = true;
+            } else {
+                #define DISABLE_KEYBOARD_PRINTF
+                keyboard.out = false;
+            }
+        }
+
+        if (keyboard.data == 0x48) { nighterm_move_cursor(term.curY - 1, term.curX - 1); }
+        if (keyboard.data == 0x50) { nighterm_move_cursor(term.curY + 1, term.curX - 1); }
+        if (keyboard.data == 0x4B) { nighterm_move_cursor(term.curY, term.curX - 1); }
+        if (keyboard.data == 0x4D) { nighterm_move_cursor(term.curY, term.curX + 1); }
+
+        if (keyboard.state == KEYBOARD_NORMAL)     { letterString = sv_layout[data].normal; }
+        else if (keyboard.state == KEYBOARD_SHIFT) { letterString = sv_layout[data].shifted; }
+        else if (keyboard.state == KEYBOARD_CAPS)  { letterString = sv_layout[data].caps; }
+        else {
+            printf("Keyboard struct has weird state: %u", keyboard.state);
+        }
+
+        if((KEYBOARD_PRINTF_SUPPORT || keyboard.out) && letterString != "") { printf("%s", letterString); }
+
+        i8259_SendEndOfInterrupt(1);
     }
-
-    if (data == 0x2A || data == 0x36) { keyboard.state = KEYBOARD_SHIFT; }
-    if (data == 0x3A) { keyboard.state = KEYBOARD_CAPS; }
-    if (data == 0xAA || data == 0xB6) { keyboard.state = KEYBOARD_NORMAL; }
-    
-    if (data == 0x01) { nighterm_clear(); }
-
-    if (data == 0x48) { nighterm_move_cursor(term.curY - 1, term.curX - 1); }
-    if (data == 0x50) { nighterm_move_cursor(term.curY + 1, term.curX - 1); }
-    if (data == 0x4B) { nighterm_move_cursor(term.curY, term.curX - 1); }
-    if (data == 0x4D) { nighterm_move_cursor(term.curY, term.curX + 1); }
-
-
-    if (keyboard.state == KEYBOARD_NORMAL) { letterString = sv_layout[data].normal; }
-    else if (keyboard.state == KEYBOARD_SHIFT) { letterString = sv_layout[data].shifted; }
-    else if (keyboard.state == KEYBOARD_CAPS) { letterString = sv_layout[data].caps; }
-    else {
-        printf("Keyboard struct has weird state: %u", keyboard.state);
-    }
-
-    if (letterString != "")
-    {
-        printf("%s", letterString);
-    }
-
-    i8259_SendEndOfInterrupt(1);
 }
 
 void init_keyboard()

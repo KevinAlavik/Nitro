@@ -18,6 +18,11 @@
         "tools.h": "c",
         "inttypes.h": "c",
         "pm.h": "c",
-        "compare": "cpp"
+        "compare": "cpp",
+        "pit.h": "c",
+        "errors.h": "c",
+        "printf.h": "c",
+        "states.h": "c",
+        "logger.h": "c"
     }
 }

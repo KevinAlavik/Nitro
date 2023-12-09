@@ -13,6 +13,11 @@
 #include "pit/pit.h"
 #include "input/keyboard.h"
 #include "errors/errors.h"
+#include "states/states.h"
+
+#define ENABLE_LOG_STARTUP_TASKS
+#define ENABLE_KEYBOARD
+#define DISABLE_KEYBOARD_PRINTF
 
 #define PSF2_MODE
 
@@ -27,88 +32,20 @@ uint64_t screen_width;
 int saved_x;
 int saved_y;
 
-int log_mode = 0;
-
 char* window_title = "Nighterm";
 
 void panic(char* m) { 
-    log(PANIC, m); 
-    
-    saved_x = term.curX;
-    saved_y = term.curY;
-    
-    nighterm_move_cursor(term.rows - 2, 0);
-    printf("i think something broke\n");
-    
-    nighterm_move_cursor(saved_y, saved_x);
+    log(PANIC, m);
     hcf(); 
 }
 
 void err(char* m) { 
-    log(ERROR, m); 
-    
-    saved_x = term.curX;
-    saved_y = term.curY;
-    
-    nighterm_move_cursor(term.rows - 2, 0);
-    printf(":(\n");
-    
-    nighterm_move_cursor(saved_y, saved_x);
+    log(ERROR, m);
 }
 
 void ok(char* m) { log(OK, m); }
 void warn(char* m) { log(WARNING, m); }
 void info(char* m) { log(INFO, m); }
-
-void setup() {
-    init_display();
-    init_nighterm(mod_request.response->modules[0]);
-    nighterm_move_cursor(1, 0);
-    if(log_mode) { log(OK, "Initialized display."); }
-    idt_init();
-    if(log_mode) { log(OK, "Initialized IDT."); }
-    register_error_handlers();
-    if(log_mode) { log(OK, "Registered errors."); }
-    init_pm();
-    if(log_mode) { log(OK, "Initialized physical memory manager."); }
-    usable_memory_count = get_usable_memory_count();
-    if(log_mode) { log(OK, "Saved usable memory count."); }
-    screen_height = getScreenHeight();
-    screen_width = getScreenWidth();
-    if(log_mode) { log(OK, "Saved screen height and width."); }
-    i8259_Configure(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false);
-    if(log_mode) { log(OK, "Initialized PIC controller."); }
-    pit_init();
-    if(log_mode) { log(OK, "Initialized PIT controller."); }
-    init_keyboard();
-    if(log_mode) { log(OK, "Initialized keyboard."); }
-
-    saved_x = term.curX;
-    saved_y = term.curY;
-
-    nighterm_move_cursor(term.rows - 1, 0);
-    for (int i = 0; i < term.cols; i++) {
-        nighterm_set_char_fg(122, 122, 122);
-        printf("=");
-    }
-    
-
-    nighterm_move_cursor(term.rows - term.rows, 0);
-    for (int i = 0; i < term.cols; i++) {
-        nighterm_set_char_fg(122, 122, 122);
-        printf("=");
-    }
-    // Footer text
-
-    nighterm_set_char_fg(255, 255, 255);
-    nighterm_move_cursor(term.rows - 2, 0);
-    printf(":)\n");
-
-    nighterm_move_cursor(term.rows - term.rows, 3);
-    printf(" %s ", window_title);
-
-    nighterm_move_cursor(saved_y, saved_x);
-}
 
 char* to_mb(uint64_t size) {
     static char result[20]; // Adjust the size based on your needs
@@ -119,29 +56,58 @@ char* to_mb(uint64_t size) {
     return result;
 }
 
-__attribute__((interrupt)) void test_int(void*) {
-    log(OK, "Interupt called");
+void setup() {
+    init_display();
+    init_nighterm(mod_request.response->modules[0]);
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized display."); }
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized Nighterm."); }
+    idt_init();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized IDT."); }
+    register_error_handlers();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Registered errors."); }
+    init_pm();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized physical memory manager."); }
+    usable_memory_count = get_usable_memory_count();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Saved usable memory count."); }
+    screen_height = getScreenHeight();
+    screen_width = getScreenWidth();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Saved screen height and width."); }
+    i8259_Configure(PIC_REMAP_OFFSET, PIC_REMAP_OFFSET + 8, false);
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized PIC controller."); }
+    pit_init();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized PIT controller."); }
+    init_keyboard();
+    if(LOG_TASKS_SUPPORT) { log(OK, "Initialized keyboard."); }
+    log(WARNING, "Booting into pre-boot, unstable."); 
 }
 
 void _start(void) {
     setup();
-    //nighterm_clear();
-    nighterm_set_char_fg(102, 179, 255);
-
-    printf("\n");
-    printf("        /      _/./\n");
-    printf("   ,-'    `-:.,-'/\n");
-    printf("  > O )<)    _  (\n");
-    printf("   `-._  _.:' `-.\\\n");
-    printf("       `` \\;\n");
-    printf("\n");
+    nighterm_set_char_fg(132, 132, 130);
+    printf("\npre-boot env (keyboard out disabled, press escape to toggle it)\n-------------------------------\n");
     nighterm_set_char_fg(255, 255, 255);
-    
+
     printf("Usable memory \t");
     nighterm_set_char_fg(146, 255, 151);
     printf("%s\n", to_mb(usable_memory_count));
     nighterm_set_char_fg(255, 255, 255);
 
-    printf("\n");
+    printf("Terminal Cols \t");
+    nighterm_set_char_fg(146, 255, 151);
+    printf("%u\n", term.cols);
+    nighterm_set_char_fg(255, 255, 255);
+    
+    printf("Terminal Rows \t");
+    nighterm_set_char_fg(146, 255, 151);
+    printf("%u\n", term.rows);
+    nighterm_set_char_fg(255, 255, 255);
+    
+    printf("Terminal \t\t");
+    nighterm_set_char_fg(146, 255, 151);
+    printf("%s\n", term.title);
+    nighterm_set_char_fg(255, 255, 255);
+    nighterm_set_char_fg(132, 132, 130);
+    printf("-------------------------------\n");
+    nighterm_set_char_fg(255, 255, 255);
     hlt();
 }
