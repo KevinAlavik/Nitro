@@ -32,7 +32,9 @@ struct Terminal {
     int curY;
     int rows;
     int cols;
-    char* buffer;
+    int cx;
+    int cy;
+    char buffer[4096*4];
     char* title;
 };
 
@@ -45,7 +47,5 @@ void nighterm_set_char_fg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_set_char_bg(uint8_t r, uint8_t b, uint8_t g);
 void nighterm_write(char ch);
 void nighterm_move_cursor(int row, int col);
-
-extern struct Terminal nighterm_get_term();
 
 #endif // NIGHTERM_H_

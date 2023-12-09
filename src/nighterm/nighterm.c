@@ -1,7 +1,6 @@
 #include "nighterm.h"
 #include "display/vga.h"
 struct Terminal term;
-char textBuffer[4096*4];
 uint8_t fg_r = 255;
 uint8_t fg_g = 255;
 uint8_t fg_b = 255;
@@ -74,7 +73,7 @@ void nighterm_refresh() {
     int row, col;
     for (row = 0; row < term.rows; row++) {
         for (col = 0; col < term.cols; col++) {
-            char ch = textBuffer[row * term.cols + col];
+            char ch = term.buffer[row * term.cols + col];
             nighterm_render_char(row, col, ch);
         }
     }
@@ -82,7 +81,7 @@ void nighterm_refresh() {
 
 void nighterm_clear() {
     size_t buffer_size = (size_t)term.rows * term.cols;
-    memset(textBuffer, ' ', buffer_size);
+    memset(term.buffer, ' ', buffer_size);
     nighterm_refresh();
 }
 
@@ -106,13 +105,14 @@ void nighterm_write(char ch) {
         break;// ignore termination
     default:
         int bufferIndex = term.curY * term.cols + term.curX;
-        textBuffer[bufferIndex] = ch;
+        term.buffer[bufferIndex] = ch;
         term.curX++;
 
         if(term.curX-1 == term.cols) {
             term.curY++;
         }
         nighterm_render_char(term.curY,term.curX - 1,ch);
+        
         break;
     }
 
@@ -121,8 +121,4 @@ void nighterm_write(char ch) {
 void nighterm_move_cursor(int row, int col) {
     term.curX = col;
     term.curY = row;
-}
-
-struct Terminal nighterm_get_term() {
-    return term;
 }

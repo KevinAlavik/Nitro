@@ -54,15 +54,15 @@ __attribute__((interrupt)) void keyboard_handler(void *)
             printf("Keyboard struct has weird state: %u", keyboard.state);
         }
 
+        // TODO: Store old curor location and compare if its not the same if it isnt then clear the old loc
+
         if((KEYBOARD_PRINTF_SUPPORT || keyboard.out) && letterString != "") { 
             printf("%s", letterString); 
-            // nighterm_move_cursor(term.curY, term.curX+1);
-            // nighterm_set_char_bg(255, 255, 255);
-            // printf(" ");    
-            // nighterm_move_cursor(term.curY, term.curX-1);
-            // nighterm_set_char_bg(0, 0, 0);
-            // printf("\b \b");
+            nighterm_set_char_bg(255, 255, 255);
+            printf(" \b \b");
+            nighterm_set_char_bg(0, 0, 0);
         }
+
 
         i8259_SendEndOfInterrupt(1);
     }

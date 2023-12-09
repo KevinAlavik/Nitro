@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #define KEYBOARD_SUPPORT false
-#define KEYBOARD_PRINTF_SUPPORT false
+#define KEYBOARD_PRINTF_SUPPORT true
 #define LOG_TASKS_SUPPORT false
 
 #ifndef ENABLE_KEYBOARD

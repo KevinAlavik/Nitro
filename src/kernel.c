@@ -17,7 +17,7 @@
 
 #define ENABLE_LOG_STARTUP_TASKS
 #define ENABLE_KEYBOARD
-#define DISABLE_KEYBOARD_PRINTF
+#define ENABLE_KEYBOARD_PRINTF
 
 #define PSF2_MODE
 
@@ -84,7 +84,7 @@ void setup() {
 void _start(void) {
     setup();
     nighterm_set_char_fg(132, 132, 130);
-    printf("\npre-boot env (keyboard out disabled, press escape to toggle it)\n-------------------------------\n");
+    printf("\npre-boot env\n-------------------------------\n");
     nighterm_set_char_fg(255, 255, 255);
 
     printf("Usable memory \t");
