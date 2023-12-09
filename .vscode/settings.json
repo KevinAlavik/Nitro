@@ -23,6 +23,7 @@
         "errors.h": "c",
         "printf.h": "c",
         "states.h": "c",
-        "logger.h": "c"
+        "logger.h": "c",
+        "string.h": "c"
     }
 }
