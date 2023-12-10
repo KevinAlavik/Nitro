@@ -34,8 +34,9 @@ int init_nighterm(struct limine_file* font) {
     term.cols = (getScreenWidth() / hdr.width);
     term.curX = 0;
     term.curY = 0;
-    term.title = "Nighterm";
+    term.title = "Nighterm(very bad)";
     nighterm_clear();
+    nighterm_do_curinv();
 
     return 1;
 }
@@ -87,13 +88,14 @@ void nighterm_clear() {
 
 void nighterm_write(char ch) {
     size_t buffer_size = (size_t)term.rows * term.cols;
-
+    nighterm_redraw();
 
     switch (ch)
     {
     case '\n':
         term.curX = 0;
         term.curY++;
+        
         break;
     case '\t':
         term.curX += INDENT_AMOUNT - (term.curX % INDENT_AMOUNT);
@@ -102,17 +104,17 @@ void nighterm_write(char ch) {
         term.curX -= 1;
         break;
     case 0:
+        nighterm_do_curinv();
         break;// ignore termination
     default:
         int bufferIndex = term.curY * term.cols + term.curX;
         term.buffer[bufferIndex] = ch;
+        nighterm_render_char(term.curY,term.curX,ch);
         term.curX++;
-
         if(term.curX-1 == term.cols) {
             term.curY++;
         }
-        nighterm_render_char(term.curY,term.curX - 1,ch);
-        
+        nighterm_do_curinv();
         break;
     }
 
@@ -121,4 +123,40 @@ void nighterm_write(char ch) {
 void nighterm_move_cursor(int row, int col) {
     term.curX = col;
     term.curY = row;
+}
+void nighterm_redraw(){
+    int bufferIndex = term.curY * term.cols + term.curX;
+    nighterm_render_char(term.curY,term.curX,term.buffer[bufferIndex]);
+}
+
+void nighterm_do_curinv(){
+    uint8_t tmp_r = 0;
+    uint8_t tmp_g = 0;
+    uint8_t tmp_b = 0;
+    
+    tmp_r = bg_r;
+    tmp_g = bg_g;
+    tmp_b = bg_b;
+
+    bg_r = fg_r;
+    bg_g = fg_g;
+    bg_b = fg_b;
+
+    fg_r = tmp_r;
+    fg_g = tmp_g;
+    fg_b = tmp_b;
+
+    nighterm_redraw();
+
+    tmp_r = bg_r;
+    tmp_g = bg_g;
+    tmp_b = bg_b;
+
+    bg_r = fg_r;
+    bg_g = fg_g;
+    bg_b = fg_b;
+
+    fg_r = tmp_r;
+    fg_g = tmp_g;
+    fg_b = tmp_b;
 }
