@@ -34,7 +34,7 @@ int init_nighterm(struct limine_file* font) {
     term.cols = (getScreenWidth() / hdr.width);
     term.curX = 0;
     term.curY = 0;
-    term.title = "Nighterm(very bad)";
+    term.title = "Nighterm";
     nighterm_clear();
     nighterm_do_curinv();
 
