@@ -1,13 +1,17 @@
-override CC := gcc # Use x86_64-elf-gcc for macos
-override LD := ld  # Use x86_64-elf-ld for macos
-# Nuke built-in rules and variables.
+override CC := gcc
+override LD := ld
 override MAKEFLAGS += -rR
- 
-# This is the name that our final kernel executable will have.
-# Change as needed.
+
 override KERNEL := Nitro
- 
-# Convenience macro to reliably declare user overridable variables.
+
+ifeq ($(UNAME_S),Darwin)
+    override CC := x86_64-elf-gcc
+    override LD := x86_64-elf-ld
+else
+    override CC := cc
+    override LD := ld
+endif
+
 define DEFAULT_VAR =
     ifeq ($(origin $1),default)
         override $(1) := $(2)
@@ -16,115 +20,60 @@ define DEFAULT_VAR =
         override $(1) := $(2)
     endif
 endef
- 
-# It is suggested to use a custom built cross toolchain to build a kernel.
-# We are using the standard "cc" here, it may work by using
-# the host system's toolchain, but this is not guaranteed.
+
 override DEFAULT_CC := cc
 $(eval $(call DEFAULT_VAR,CC,$(DEFAULT_CC)))
- 
-# Same thing for "ld" (the linker).
+
 override DEFAULT_LD := ld
 $(eval $(call DEFAULT_VAR,LD,$(DEFAULT_LD)))
- 
-# User controllable C flags.
+
 override DEFAULT_CFLAGS := -g -O2 -pipe
 $(eval $(call DEFAULT_VAR,CFLAGS,$(DEFAULT_CFLAGS)))
- 
-# User controllable C preprocessor flags. We set none by default.
+
 override DEFAULT_CPPFLAGS :=
 $(eval $(call DEFAULT_VAR,CPPFLAGS,$(DEFAULT_CPPFLAGS)))
- 
-# User controllable nasm flags.
+
 override DEFAULT_NASMFLAGS := -F dwarf -g
 $(eval $(call DEFAULT_VAR,NASMFLAGS,$(DEFAULT_NASMFLAGS)))
- 
-# User controllable linker flags. We set none by default.
+
 override DEFAULT_LDFLAGS :=
 $(eval $(call DEFAULT_VAR,LDFLAGS,$(DEFAULT_LDFLAGS)))
- 
-# Internal C flags that should not be changed by the user.
-override CFLAGS += \
-    -O0     \
-    -Ilimine \
-    -Isrc \
-    -Wall \
-    -Wextra \
-    -std=gnu11 \
-    -ffreestanding \
-    -fno-stack-protector \
-    -fno-stack-check \
-    -fno-lto \
-    -fno-PIE \
-    -fno-PIC \
-    -m64 \
-    -march=x86-64 \
-    -mabi=sysv \
-    -mcmodel=kernel \
-    -mno-80387 \
-    -mno-mmx \
-    -mno-sse \
-    -mno-sse2 \
-    -mno-red-zone \
-	-DPRINTF_DISABLE_SUPPORT_FLOAT \
-    -DHEAP_ACCESSABLE
- 
-# Internal linker flags that should not be changed by the user.
-override LDFLAGS += \
-    -nostdlib \
-    -static \
-    -m elf_x86_64 \
-    -z max-page-size=0x1000 \
-    -T linker.ld
- 
-# Internal linker flags that should not be changed by the user.
-override CPPFLAGS := \
-    -I. \
-    $(CPPFLAGS) \
-    -MMD \
-    -MP
- 
-# Internal nasm flags that should not be changed by the user.
-override NASMFLAGS += \
-    -Wall \
-    -f elf64 
 
-# Use "find" to glob all *.c, *.S, and *.asm files in the tree and obtain the
-# object and header dependency file names.
+override CFLAGS += -O0 -Ilimine -Isrc -Wall -Wextra -std=gnu11 -ffreestanding -fno-stack-protector -fno-stack-check -fno-lto -fno-PIE -fno-PIC -m64 -march=x86-64 -mabi=sysv -mcmodel=kernel -mno-80387 -mno-mmx -mno-sse -mno-sse2 -mno-red-zone -DPRINTF_DISABLE_SUPPORT_FLOAT -DHEAP_ACCESSABLE
+
+override LDFLAGS += -nostdlib -static -m elf_x86_64 -z max-page-size=0x1000 -T linker.ld
+
+override CPPFLAGS := -I. $(CPPFLAGS) -MMD -MP
+
+override NASMFLAGS += -Wall -f elf64
+
 override CFILES := $(shell cd src && find -L * -type f -name '*.c')
 override ASFILES := $(shell cd src && find -L * -type f -name '*.S')
 override NASMFILES := $(shell cd src && find -L * -type f -name '*.asm')
 override OBJ := $(addprefix obj/,$(CFILES:.c=.c.o) $(ASFILES:.S=.S.o) $(NASMFILES:.asm=.asm.o))
 override HEADER_DEPS := $(addprefix obj/,$(CFILES:.c=.c.d) $(ASFILES:.S=.S.d))
- 
-# Default target.
+
 .PHONY: all
 all: bin/$(KERNEL)
- 
-# Link rules for the final kernel executable.
+
 bin/$(KERNEL): GNUmakefile linker.ld $(OBJ)
 	mkdir -p "$$(dirname $@)"
 	$(LD) $(OBJ) $(LDFLAGS) -o $@
- 
-# Include header dependencies.
+
 -include $(HEADER_DEPS)
- 
-# Compilation rules for *.c files.
+
 obj/%.c.o: src/%.c GNUmakefile
 	mkdir -p "$$(dirname $@)"
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
- 
-# Compilation rules for *.S files.
+
 obj/%.S.o: src/%.S GNUmakefile
 	mkdir -p "$$(dirname $@)"
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $< -o $@
- 
-# Compilation rules for *.asm (nasm) files.
+
 obj/%.asm.o: src/%.asm GNUmakefile
 	mkdir -p "$$(dirname $@)"
 	nasm $(NASMFLAGS) $< -o $@
- 
-# Remove object files and the final executable.
+
 .PHONY: clean full-clean
 clean:
 	rm -rf bin obj Nitro.raw.bin
