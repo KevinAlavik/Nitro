@@ -24,6 +24,8 @@
         "printf.h": "c",
         "states.h": "c",
         "logger.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "idt.h": "c",
+        "cstdint": "c"
     }
 }

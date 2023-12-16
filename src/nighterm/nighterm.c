@@ -121,8 +121,10 @@ void nighterm_write(char ch) {
 }
 
 void nighterm_move_cursor(int row, int col) {
+    nighterm_redraw();
     term.curX = col;
     term.curY = row;
+    nighterm_do_curinv();
 }
 void nighterm_redraw(){
     int bufferIndex = term.curY * term.cols + term.curX;
