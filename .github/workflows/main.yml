@@ -19,4 +19,7 @@ jobs:
         sudo apt-get install -y nasm xorriso
       
     - name: Run build script
-      run: ./build.sh
+      run: |
+        chmod +x build.sh
+        ./build.sh
+
