@@ -83,6 +83,7 @@ void setup() {
 
 void _start(void) {
     setup();
+    keyboard.out = 1;
     nighterm_set_char_fg(132, 132, 130);
     printf("\npre-boot env\n-------------------------------\n");
     nighterm_set_char_fg(255, 255, 255);
